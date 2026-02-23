@@ -36,8 +36,9 @@ from pypdf import PdfReader
 load_dotenv()
 
 # Configuration
-SEARCH_TERM = "Software Engineer (Python, Java)"
-LOCATIONS = ["Tokyo, Japan", "Hongkong, China"]
+SEARCH_TERMS = ["Software Engineer (Python, Java)", "Data Engineer"]
+# SEARCH_TERM = "Software Engineer (Python, Java)"
+LOCATIONS = ["Tokyo, Japan", "Hongkong"]
 RESULT_LIMIT = 15
 HOURS_OLD = 24
 PROXY_URL = os.getenv("PROXY_URL", None)
@@ -195,14 +196,14 @@ def fetch_missing_description(url: str, proxies: dict = None) -> str:
         return ""
 
 # scrape jobs
-def get_jobs_data(location: str) -> pd.DataFrame:
+def get_jobs_data(location: str, search_term: str) -> pd.DataFrame:
     """
     Scrape job listings by JobSpy.
 
     Add Retry logic if needed.
     """
     proxies = [PROXY_URL] if PROXY_URL else None
-    print(f"🕵️  CareerScout is searching for '{SEARCH_TERM}' in '{location}'...")
+    print(f"🕵️  CareerScout is searching for '{search_term}' in '{location}'...")
     print(f"🔌  Proxy: {proxies[0] if proxies else 'None'}")
 
     MAX_RETRIES = 5
@@ -212,7 +213,7 @@ def get_jobs_data(location: str) -> pd.DataFrame:
             print(f"   🔄 Attempt {attempt} of {MAX_RETRIES}...")
             jobs = scrape_jobs(
                 site_name=["linkedin"],
-                search_term=SEARCH_TERM,
+                search_term=search_term,
                 location=location,
                 result_wanted=RESULT_LIMIT,
                 hours_old=HOURS_OLD,
@@ -327,7 +328,8 @@ def main():
     # 1. Scraping
     df = pd.DataFrame()
     for location in LOCATIONS:
-        df = pd.concat([df,get_jobs_data(location)], ignore_index=True, sort=False)
+        for search_term in SEARCH_TERMS:
+            df = pd.concat([df,get_jobs_data(location,search_term)], ignore_index=True, sort=False)
     if df.empty:
         return
 
