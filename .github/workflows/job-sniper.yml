@@ -25,4 +25,4 @@ jobs:
 
       - name: Run LinkedIn Job Sniper
         run: |
-          python src/main.py
+          python main.py
