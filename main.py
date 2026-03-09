@@ -36,7 +36,7 @@ from pypdf import PdfReader
 load_dotenv()
 
 # Configuration
-SEARCH_TERMS = ["Trade Support", "Operation Analyst","Treasury Analyst"，"Middle Office","Derivatives"]
+SEARCH_TERMS = ["Trade Support", "Operation Analyst","Treasury Analyst","Middle Office","Derivatives"]
 # SEARCH_TERM = "Software Engineer (Python, Java)"
 LOCATIONS = ["Sydney"]
 RESULT_LIMIT = 30
